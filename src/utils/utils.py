@@ -1,5 +1,6 @@
 import configparser
 import requests
+import json
 from pathlib import Path
 
 def parse_ini(config_file) -> list:
@@ -18,11 +19,10 @@ def parse_ini(config_file) -> list:
 
 def get_content_from_file(path: Path):
     content = ''
-    with open(path, 'r') as f:
+    with path.open() as f:
         content = f.readlines()
 
     return content
-
 
 def http_exception_handler(func):
     def inner_function(*args, **kwargs):
@@ -36,7 +36,13 @@ def http_exception_handler(func):
             print('Operation timeout: ', te)
         except requests.TooManyRedirects as tmre:
             print('Too many redirects from Github resource: ', tmre)
-        except Exception as e:
-            print('An abnormal exception has occured: ', e)
 
     return inner_function
+
+def get_help_info(path: Path, section: str = 'general'):
+    help_obj = dict()
+    with path.open() as f:
+        helps = json.load(f)
+        return helps.get(section)
+
+

@@ -1,0 +1,27 @@
+{
+    "general": {
+        "secret-name": {
+            "help": "Name of the secret name. It can be a list.",
+            "rich_help_panel": "Secrets"
+        },
+        "token": {
+            "help": "Personal Access Token to authenticate on GitHub.",
+            "rich_help_panel": "Token Info"
+        },
+
+        "token-file": {
+            "help": "Path to file to read Personal Access Token to authenticate on GitHub.",
+            "rich_help_panel": "Token Info"
+        },
+        "env-file": {
+            "help": "Path to INI file to extract secrets information. --secret-name and other screts values flag are ignored.",
+            "rich_help_panel": "Secrets"
+        },
+        "value-from-file": {
+            "help": "Path to file containing secret values. If multiple secrets names are set, the corresponding value has to be separated by lines.",
+            "rich_help_panel": "Secrets"
+        }
+    },
+    "repos": {},
+    "orgs": {}
+}
