@@ -3,8 +3,7 @@
 
 A user-friendly CLI tool that enables users to upload secrets to Github Secrets. This tool allow users to easily manage secrets within Github repositories, making it easier to deploy and manage applications. By automating the process of uploading secrets, is reduced the risk of errors that can occur when uploading secrets manually.
 
-# Installation
-## Cloning the Repository
+# Develop
 Clone the repository:
 ```bash
 git clone https://github.com/plusiv/github-secretor.git
@@ -22,10 +21,4 @@ Running the project
 ```bash
 poetry shell
 python src/app.py --help
-```
-
-## Using pip
-Install the tool using pip:
-```bash
-pip install github-secretor
 ```
