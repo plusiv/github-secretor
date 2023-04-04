@@ -1,5 +1,6 @@
 import typer
 import os
+from rich import print
 from pathlib import Path
 from .schemas import ReposCommon
 
@@ -17,6 +18,12 @@ def validate_common_options(state: ReposCommon)->bool:
         raise typer.Abort()
 
     return True
+
+def validate_non_duplicated(elements: list)->bool:
+    elements_set = set()
+    for element in elements:
+        elements_set.add(element)
+    return len(elements_set) == len(elements)
 
 def validate_file_exists(path_to_file: Path)->Path:
     validation = os.path.isfile(str(path_to_file))

@@ -1,8 +1,10 @@
 import typer
-from rich import print
 from . import GENERAL_HELPS, REPOS_HELPS
 from .schemas import ReposCommon
-from .validations import validate_file_exists, validate_common_options 
+from .validations import validate_file_exists, \
+        validate_common_options, \
+        validate_non_duplicated 
+from rich import print
 from typing import Optional, List
 from utils import utils
 from pathlib import Path
@@ -78,7 +80,10 @@ def add_secret(
     # Run validations
     validate_common_options()
 
-    if not env_file:
+    if env_file:
+        ...
+    # Construct secrets names and values if not in a env file
+    else:
         # Set secret names
         if not secret_names:
             secret_names = typer.prompt("Insert secrets names separated by comma (',')")
@@ -87,13 +92,15 @@ def add_secret(
         if value_from_file:
             secret_value = utils.get_content_from_file(value_from_file)
 
+        # Check if there's repeated duplicated secret names
         else:
-            for secret_name in secret_names:
-                secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
-                secrets.append((secret_name, secret_value))
-
-    else:
-        ...
+            if validate_non_duplicated(secret_names):
+                for secret_name in secret_names:
+                    secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
+                    secrets.append((secret_name, secret_value))
+            else:
+                print(":boom:[bold red]Error:[/bold red] Unable to add duplicated values.")
+                raise typer.Abort()
 
     rsm = secretor.RepoSecretsManager(owner, repo_name, token, secrets)
     rsm.push_to_github()
