@@ -1,4 +1,5 @@
 import typer
+from rich import print
 from . import GENERAL_HELPS, REPOS_HELPS
 from typing import Optional, List
 from utils import utils
@@ -12,18 +13,32 @@ app = typer.Typer()
 # and rich help in second position
 help_info = lambda section, help_obj: (section.get(help_obj).get('help'), section.get(help_obj).get('rich_help_panel')) if section.get(help_obj) else (None, None)
 
-@app.command("add")
-def add_secret(
-        owner: str = typer.Option(..., \
-                prompt="Insert Owner", \
-                envvar='GIT_USERNAME', \
-                help=help_info(GENERAL_HELPS, 'owner')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'owner')[1]),
+state = {
+        "owner": "",
+        "repo_name": "",
+        "token": "",
+        "token_file": "",
+        }
 
-        repo_name: str = typer.Option(..., \
-                prompt="Insert repository name", \
-                help=help_info(GENERAL_HELPS, 'repo-name')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'repo-name')[1]),
+def validate_common_options()->bool:
+    # Set owner if passed
+    if not state["owner"]:
+        state["owner"] = typer.prompt("Insert repository owner")
+
+    # Set repo name if passed
+    if not state["repo_name"]:
+        state["repo_name"] = typer.prompt("Insert repository name")
+
+@app.callback()
+def main(
+        owner: str = typer.Option("", \
+                envvar='GIT_USERNAME', \
+                help=help_info(REPOS_HELPS, 'owner')[0], \
+                rich_help_panel=help_info(REPOS_HELPS, 'owner')[1]),
+
+        repo_name: str = typer.Option("", \
+                help=help_info(REPOS_HELPS, 'repo-name')[0], \
+                rich_help_panel=help_info(REPOS_HELPS, 'repo-name')[1]),
 
         token: str = typer.Option("", \
                 '--token', '-t', \
@@ -33,6 +48,20 @@ def add_secret(
         token_file: Optional[Path] = typer.Option("", envvar='GIT_TOKEN_PATH', \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),
+        ):
+
+    # Set github access token if not passed
+    if not token and not token_file:
+        token = typer.prompt("Insert Github Access Token", hide_input=True)
+    elif token and token_file:
+        print(":boom:[bold red]Error:[/bold red] You shoul use either --token or --token_file to specify Github Access Token")
+        raise typer.Abort()
+    else:
+        ...
+
+
+@app.command("add")
+def add_secret(
 
         secret_names: Optional[List[str]] = typer.Option(None, \
                 '--secret-name', '-n', \
@@ -55,22 +84,25 @@ def add_secret(
 
     secrets = []
 
-    # Set github access token if not passed
-    if not token and not token_file:
-        token = typer.prompt("Insert Github Access Token", hide_input=True)
+    # Run validations
+    validate_common_options()
 
-    # Set secret names
-    if not secret_names:
-        secret_names = typer.prompt("Insert secret name")
-        secret_names = secret_names.split(',')
+    if not env_file:
+        # Set secret names
+        if not secret_names:
+            secret_names = typer.prompt("Insert secrets names separated by comma (',')")
+            secret_names = secret_names.split(',')
 
-    if value_from_file:
-        secret_value = utils.get_content_from_file(value_from_file)
+        if value_from_file:
+            secret_value = utils.get_content_from_file(value_from_file)
+
+        else:
+            for secret_name in secret_names:
+                secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
+                secrets.append((secret_name, secret_value))
 
     else:
-        for secret_name in secret_names:
-            secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
-            secrets.append((secret_name, secret_value))
+        ...
 
     rsm = secretor.RepoSecretsManager(owner, repo_name, token, secrets)
     rsm.push_to_github()

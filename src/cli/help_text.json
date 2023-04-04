@@ -22,6 +22,15 @@
             "rich_help_panel": "Secrets"
         }
     },
-    "repos": {},
+    "repos": {
+        "owner": {
+            "help": "Repository owner.",
+            "rich_help_panel": ""
+        },
+        "repo-name": {
+            "help": "Repository name to add secrets.",
+            "rich_help_panel": ""
+        }
+    },
     "orgs": {}
 }
