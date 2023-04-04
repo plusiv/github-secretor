@@ -1,6 +1,8 @@
 import typer
 from rich import print
 from . import GENERAL_HELPS, REPOS_HELPS
+from .schemas import ReposCommon
+from .validations import validate_file_exists, validate_common_options 
 from typing import Optional, List
 from utils import utils
 from pathlib import Path
@@ -13,21 +15,7 @@ app = typer.Typer()
 # and rich help in second position
 help_info = lambda section, help_obj: (section.get(help_obj).get('help'), section.get(help_obj).get('rich_help_panel')) if section.get(help_obj) else (None, None)
 
-state = {
-        "owner": "",
-        "repo_name": "",
-        "token": "",
-        "token_file": "",
-        }
-
-def validate_common_options()->bool:
-    # Set owner if passed
-    if not state["owner"]:
-        state["owner"] = typer.prompt("Insert repository owner")
-
-    # Set repo name if passed
-    if not state["repo_name"]:
-        state["repo_name"] = typer.prompt("Insert repository name")
+state = ReposCommon()
 
 @app.callback()
 def main(
@@ -46,6 +34,7 @@ def main(
                 rich_help_panel= help_info(GENERAL_HELPS, 'token')[1]),
 
         token_file: Optional[Path] = typer.Option("", envvar='GIT_TOKEN_PATH', \
+                callback=validate_file_exists, \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),
         ):
@@ -69,11 +58,13 @@ def add_secret(
                 rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
 
         value_from_file: Optional[Path] = typer.Option(None, \
+                callback=validate_file_exists, \
                 help=help_info(GENERAL_HELPS, 'value-from-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'value-from-file')[1]),
 
         env_file: Optional[Path] = typer.Option(None, \
                 '--env-file', '-f', \
+                callback=validate_file_exists, \
                 help=help_info(GENERAL_HELPS, 'env-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'env-file')[1]),
 
