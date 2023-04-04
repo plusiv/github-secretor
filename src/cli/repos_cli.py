@@ -14,20 +14,6 @@ help_info = lambda section, help_obj: (section.get(help_obj).get('help'), sectio
 
 @app.command("add")
 def add_secret(
-        secret_names: Optional[List[str]] = typer.Option(None, \
-                '--secret-name', '-n', \
-                help=help_info(GENERAL_HELPS, 'secret-name')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
-
-        value_from_file: Optional[Path] = typer.Option(None, \
-                help=help_info(GENERAL_HELPS, 'value-from-file')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'value-from-file')[1]),
-
-        env_file: Optional[Path] = typer.Option(None, \
-                '--env-file', '-f', \
-                help=help_info(GENERAL_HELPS, 'env-file')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'env-file')[1]),
-
         owner: str = typer.Option(..., \
                 prompt="Insert Owner", \
                 envvar='GIT_USERNAME', \
@@ -47,6 +33,20 @@ def add_secret(
         token_file: Optional[Path] = typer.Option("", envvar='GIT_TOKEN_PATH', \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),
+
+        secret_names: Optional[List[str]] = typer.Option(None, \
+                '--secret-name', '-n', \
+                help=help_info(GENERAL_HELPS, 'secret-name')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
+
+        value_from_file: Optional[Path] = typer.Option(None, \
+                help=help_info(GENERAL_HELPS, 'value-from-file')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'value-from-file')[1]),
+
+        env_file: Optional[Path] = typer.Option(None, \
+                '--env-file', '-f', \
+                help=help_info(GENERAL_HELPS, 'env-file')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'env-file')[1]),
 
         replace: bool = typer.Option(False, \
                 help=help_info(GENERAL_HELPS, 'replace')[0], \
