@@ -91,9 +91,11 @@ def add_secret(
 
         if value_from_file:
             secret_value = utils.get_content_from_file(value_from_file)
+                
 
-        # Check if there's repeated duplicated secret names
+        # Prompt values if there'snt a file with values
         else:
+            # Check if there's repeated duplicated secret names
             if validate_non_duplicated(secret_names):
                 for secret_name in secret_names:
                     secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)

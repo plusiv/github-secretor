@@ -13,8 +13,8 @@ def validate_common_options(state: ReposCommon)->bool:
     if not state.repo_name:
         state.repo_name = typer.prompt("Insert repository name")
 
-    if state.repo_name or state.owner:
-        print(":boom:[bold red]Error:[/bold red] Invalid repository name or ")
+    if not state.repo_name or not state.owner:
+        print(":boom:[bold red]Error:[/bold red] Repository name ")
         raise typer.Abort()
 
     return True
