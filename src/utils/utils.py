@@ -1,30 +1,31 @@
-import configparser
+from dotenv import dotenv_values
 import requests
 import json
 from pathlib import Path
+from typing import List
+from collections import ChainMap
 
-def parse_ini(config_file) -> list:
-    config = configparser.ConfigParser()
-    config.read_file(config_file)
+def parse_env_files(paths: List[Path]) -> List[tuple]:
+    # Creates a List of dicts of env values 
+    key_values = list(map(dotenv_values,paths))
 
-    sections = config.sections()
+    # Merges all dicts using the built-in module ChainMap.
+    # To understand why ChainMap was used instead of implementing
+    # some straightforward logic with dict.update()
+    # see https://stackoverflow.com/questions/23392976/what-is-the-purpose-of-collections-chainmap
+    key_values = dict(ChainMap(*key_values))
 
-    secrets = []
-    if sections:
-        for section in sections:
-            for item in config.items(section):
-                secrets.append([item[0].upper(), item[1]])
+    # Return a list of tuples
+    return list(key_values.items())
 
-    return secrets
-
-def get_content_from_file(path: Path):
+def get_content_from_file(path: Path) -> list:
     content = ''
     with path.open() as f:
         content = f.readlines()
 
     return content
 
-def http_exception_handler(func):
+def http_exception_handler(func) -> callable:
     def inner_function(*args, **kwargs):
         try:
             return func(*args, **kwargs)
@@ -39,7 +40,7 @@ def http_exception_handler(func):
 
     return inner_function
 
-def get_help_info(path: Path, section: str = 'general'):
+def get_help_info(path: Path, section: str = 'general') -> dict:
     help_obj = dict()
     with path.open() as f:
         helps = json.load(f)

@@ -53,7 +53,6 @@ def main(
 
 @app.command("add")
 def add_secret(
-
         secret_names: Optional[List[str]] = typer.Option(None, \
                 '--secret-name', '-n', \
                 help=help_info(GENERAL_HELPS, 'secret-name')[0], \
@@ -64,7 +63,7 @@ def add_secret(
                 help=help_info(GENERAL_HELPS, 'value-from-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'value-from-file')[1]),
 
-        env_file: Optional[Path] = typer.Option(None, \
+        env_files: Optional[List[Path]] = typer.Option(None, \
                 '--env-file', '-f', \
                 callback=validate_file_exists, \
                 help=help_info(GENERAL_HELPS, 'env-file')[0], \
@@ -78,10 +77,11 @@ def add_secret(
     secrets = []
 
     # Run validations
-    validate_common_options()
+    validate_common_options(state=state)
 
     if env_file:
-        ...
+        secrets = utils.parse_env_files(env_files)
+
     # Construct secrets names and values if not in a env file
     else:
         # Set secret names
@@ -92,7 +92,6 @@ def add_secret(
         if value_from_file:
             secret_value = utils.get_content_from_file(value_from_file)
                 
-
         # Prompt values if there'snt a file with values
         else:
             # Check if there's repeated duplicated secret names
