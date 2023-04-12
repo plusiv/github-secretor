@@ -91,6 +91,7 @@ def add_secret(
 
         if value_from_file:
             secret_value = utils.get_content_from_file(value_from_file)
+            # TODO: Validations for the len of the the secrets names and values
                 
         # Prompt values if there'snt a file with values
         else:
