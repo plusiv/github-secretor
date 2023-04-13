@@ -17,6 +17,15 @@ def validate_common_options(state: ReposCommon)->bool:
         print(":boom:[bold red]Error:[/bold red] Repository name ")
         raise typer.Abort()
 
+    # Set github access token if not passed
+    if not state.token and not state.token_file:
+        state.token = typer.prompt("Insert Github Access Token", hide_input=True)
+    elif state.token and state.token_file:
+        print(":boom:[bold red]Error:[/bold red] You shoul use either --token or --token_file to specify Github Access Token")
+        raise typer.Abort()
+    else:
+        ...
+
     return True
 
 def validate_non_duplicated(elements: list)->bool:

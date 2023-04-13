@@ -22,11 +22,13 @@ state = ReposCommon()
 @app.callback()
 def main(
         owner: str = typer.Option("", \
+                '--owner', '-o', \
                 envvar='GIT_USERNAME', \
                 help=help_info(REPOS_HELPS, 'owner')[0], \
                 rich_help_panel=help_info(REPOS_HELPS, 'owner')[1]),
 
         repo_name: str = typer.Option("", \
+                '--repo-name', '-r', \
                 help=help_info(REPOS_HELPS, 'repo-name')[0], \
                 rich_help_panel=help_info(REPOS_HELPS, 'repo-name')[1]),
 
@@ -35,20 +37,21 @@ def main(
                 help=help_info(GENERAL_HELPS, 'token')[0], \
                 rich_help_panel= help_info(GENERAL_HELPS, 'token')[1]),
 
-        token_file: Optional[Path] = typer.Option("", envvar='GIT_TOKEN_PATH', \
+        token_file: Optional[Path] = typer.Option(None, \
+                '--token-file', '-T', \
+                envvar='GIT_TOKEN_PATH', \
                 callback=validate_file_exists, \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),
         ):
 
-    # Set github access token if not passed
-    if not token and not token_file:
-        token = typer.prompt("Insert Github Access Token", hide_input=True)
-    elif token and token_file:
-        print(":boom:[bold red]Error:[/bold red] You shoul use either --token or --token_file to specify Github Access Token")
-        raise typer.Abort()
-    else:
-        ...
+    state.owner = owner
+    state.repo_name = repo_name
+    state.token = token
+    state.token_file = token_file
+
+    # Run validations
+    validate_common_options(state=state)
 
 
 @app.command("add")
@@ -76,10 +79,7 @@ def add_secret(
 
     secrets = []
 
-    # Run validations
-    validate_common_options(state=state)
-
-    if env_file:
+    if env_files:
         secrets = utils.parse_env_files(env_files)
 
     # Construct secrets names and values if not in a env file
@@ -104,6 +104,6 @@ def add_secret(
                 print(":boom:[bold red]Error:[/bold red] Unable to add duplicated values.")
                 raise typer.Abort()
 
-    rsm = secretor.RepoSecretsManager(owner, repo_name, token, secrets)
+    rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token, secrets)
     rsm.push_to_github()
 
