@@ -1,8 +1,17 @@
 import typer
 import os
 from rich import print
+from typing import Optional
+from dataclasses import dataclass
 from pathlib import Path
-from .schemas import ReposCommon
+
+@dataclass
+class ReposCommon:
+    owner: str = ""
+    repo_name: str = ""
+    token: str  = ""
+    token_file: Optional[Path] = None
+
 
 def validate_common_options(state: ReposCommon)->bool:
     # Set owner if passed

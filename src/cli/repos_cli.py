@@ -1,7 +1,7 @@
 import typer
 from . import GENERAL_HELPS, REPOS_HELPS
-from .schemas import ReposCommon
-from .validations import validate_file_exists, \
+from .validations import ReposCommon, \
+        validate_file_exists, \
         validate_common_options, \
         validate_non_duplicated 
 from rich import print
