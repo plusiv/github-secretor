@@ -112,4 +112,5 @@ def add_secret(
     
     except Exception as e:
         print.error(f"An error has occured while pusing secrets to Github. {e}", error_type="fatal")
+        raise typer.Abort()
 
