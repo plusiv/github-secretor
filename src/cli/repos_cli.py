@@ -88,7 +88,10 @@ def add_secret(
 
         if values_from_file:
             secret_values = utils.get_content_from_file(value_from_file)
-            # TODO: Validations for the len of the the secrets names and values
+            # Validations for the len of the the secrets names and values
+            if not validations.secrets_size(secret_names, secret_values):
+                print(":boom:[bold red]Error:[/bold red] Secret names and values doesn't have the same length.")
+                raise typer.Abort()
                 
         # Prompt values if there'snt a file with values
         else:

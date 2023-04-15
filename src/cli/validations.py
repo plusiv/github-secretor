@@ -12,6 +12,8 @@ class ReposCommon:
     token: str  = ""
     token_file: Optional[Path] = None
 
+def secrets_size(keys: list = [], values: list = []) -> bool:
+    return len(keys) == len(values)
 
 def common_options(state: ReposCommon)->bool:
     # Set owner if passed
