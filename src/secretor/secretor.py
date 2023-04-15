@@ -65,8 +65,19 @@ class SecretsManager:
 
             res.raise_for_status()
 
-            if res.status_code == 200:
-                print('Secret successfully added!')
+    @utils.http_exception_handler
+    def get_secret(self, secret_name: str) -> dict:
+        res = requests.get(f"{self.github_api_url}/secrets/{secret_name}", headers=self.default_headers)
+        res.raise_for_status()
+
+        return res.json()
+
+    @utils.http_exception_handler
+    def get_all_secrets(self) -> list:
+        res = requests.get(f"{self.github_api_url}/secrets", headers=self.default_headers)
+        res.raise_for_status()
+
+        return res.josn().get('secrets')
 
 class RepoSecretsManager(SecretsManager):
     def __init__(self,

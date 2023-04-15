@@ -114,3 +114,16 @@ def add_secret(
         print.error(f"An error has occured while pusing secrets to Github. {e}", error_type="fatal")
         raise typer.Abort()
 
+
+@app.command("get")
+def get_secrets(
+        get_all_secrets: bool = typer.Option(None, \
+                '--all', '-a', \
+                help=help_info(GENERAL_HELPS, 'get_all_secrets')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'get_all_secrets')[1]),
+        secret_names: Optional[List[str]] = typer.Option(None, \
+                '--secret-name', '-n', \
+                help=help_info(GENERAL_HELPS, 'secret-name')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
+        ):
+    
