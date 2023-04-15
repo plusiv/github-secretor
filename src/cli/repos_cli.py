@@ -1,9 +1,6 @@
 import typer
+import .validations
 from . import GENERAL_HELPS, REPOS_HELPS
-from .validations import ReposCommon, \
-        validate_file_exists, \
-        validate_common_options, \
-        validate_non_duplicated 
 from rich import print
 from typing import Optional, List
 from utils import utils
@@ -17,7 +14,7 @@ app = typer.Typer()
 # and rich help in second position
 help_info = lambda section, help_obj: (section.get(help_obj).get('help'), section.get(help_obj).get('rich_help_panel')) if section.get(help_obj) else (None, None)
 
-state = ReposCommon()
+state = validations.ReposCommon()
 
 @app.callback()
 def main(
@@ -40,7 +37,7 @@ def main(
         token_file: Optional[Path] = typer.Option(None, \
                 '--token-file', '-T', \
                 envvar='GIT_TOKEN_PATH', \
-                callback=validate_file_exists, \
+                callback=validations.file_exists, \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),
         ):
@@ -51,7 +48,7 @@ def main(
     state.token_file = token_file
 
     # Run validations
-    validate_common_options(state=state)
+    validations.common_options(state=state)
 
 
 @app.command("add")
@@ -62,13 +59,13 @@ def add_secret(
                 rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
 
         value_from_file: Optional[Path] = typer.Option(None, \
-                callback=validate_file_exists, \
+                callback=validations.file_exists, \
                 help=help_info(GENERAL_HELPS, 'value-from-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'value-from-file')[1]),
 
         env_files: Optional[List[Path]] = typer.Option(None, \
                 '--env-file', '-f', \
-                callback=validate_file_exists, \
+                callback=validations.file_exists, \
                 help=help_info(GENERAL_HELPS, 'env-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'env-file')[1]),
 
@@ -90,13 +87,13 @@ def add_secret(
             secret_names = secret_names.split(',')
 
         if value_from_file:
-            secret_value = utils.get_content_from_file(value_from_file)
+            secret_values = utils.get_content_from_file(value_from_file)
             # TODO: Validations for the len of the the secrets names and values
                 
         # Prompt values if there'snt a file with values
         else:
             # Check if there's repeated duplicated secret names
-            if validate_non_duplicated(secret_names):
+            if validations.non_duplicated(secret_names):
                 for secret_name in secret_names:
                     secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
                     secrets.append((secret_name, secret_value))
