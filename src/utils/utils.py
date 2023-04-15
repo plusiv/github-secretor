@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import List
 from collections import ChainMap
 
+def parse_secrets(keys: list = [], values: list = [])->List[tuple]:
+    return list(zip(keys, values))
+
 def parse_env_files(paths: List[Path]) -> List[tuple]:
     # Creates a List of dicts of env values 
     key_values = list(map(dotenv_values,paths))

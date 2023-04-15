@@ -58,10 +58,10 @@ def add_secret(
                 help=help_info(GENERAL_HELPS, 'secret-name')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
 
-        value_from_file: Optional[Path] = typer.Option(None, \
+        values_from_file: Optional[Path] = typer.Option(None, \
                 callback=validations.file_exists, \
-                help=help_info(GENERAL_HELPS, 'value-from-file')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'value-from-file')[1]),
+                help=help_info(GENERAL_HELPS, 'values-from-file')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'values-from-file')[1]),
 
         env_files: Optional[List[Path]] = typer.Option(None, \
                 '--env-file', '-f', \
@@ -86,20 +86,23 @@ def add_secret(
             secret_names = typer.prompt("Insert secrets names separated by comma (',')")
             secret_names = secret_names.split(',')
 
-        if value_from_file:
+        if values_from_file:
             secret_values = utils.get_content_from_file(value_from_file)
             # TODO: Validations for the len of the the secrets names and values
                 
         # Prompt values if there'snt a file with values
         else:
+            secret_values = []
             # Check if there's repeated duplicated secret names
             if validations.non_duplicated(secret_names):
                 for secret_name in secret_names:
                     secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
-                    secrets.append((secret_name, secret_value))
+                    secrets_values.append(secret_value)
             else:
                 print(":boom:[bold red]Error:[/bold red] Unable to add duplicated values.")
                 raise typer.Abort()
+
+        secrets = utils.parse_secrets(secret_names, secret_values)
 
     rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token, secrets)
     rsm.push_to_github()

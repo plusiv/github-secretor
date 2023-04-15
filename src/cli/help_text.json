@@ -17,7 +17,7 @@
             "help": "Path to Key=Value file to extract secrets information. This can be a list. when using this flag, --secret-name and other screts values flag are ignored.",
             "rich_help_panel": "Secrets"
         },
-        "value-from-file": {
+        "values-from-file": {
             "help": "Path to file containing secret values. If multiple secrets names are set, the corresponding value has to be separated by lines.",
             "rich_help_panel": "Secrets"
         }
