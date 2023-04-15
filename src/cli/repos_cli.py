@@ -1,7 +1,5 @@
 import typer
-import .validations
-import .printing as print 
-from . import GENERAL_HELPS, REPOS_HELPS
+from . import GENERAL_HELPS, REPOS_HELPS, validations, printing as print
 from typing import Optional, List
 from utils import utils
 from pathlib import Path
@@ -112,6 +110,6 @@ def add_secret(
         rsm.push_to_github()
         print.success(f"Secrets successfully pushed to Github. Open https://github.com/{state.owner}/{state.repo_name}/settings/secrets/actions to validate.")
     
-    except as e:
-        print.error(f"An error has occured while pusing secrets to Github. {}", error_type: "fatal" )
+    except Exception as e:
+        print.error(f"An error has occured while pusing secrets to Github. {e}", error_type="fatal")
 
