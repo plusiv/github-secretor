@@ -79,7 +79,7 @@ def add_secret(
     if env_files:
         secrets = utils.parse_env_files(env_files)
 
-    # Construct secrets names and values if not in a env file
+    # Construct secrets names and values if not in an env file
     else:
         # Set secret names
         if not secret_names:
@@ -107,6 +107,11 @@ def add_secret(
 
         secrets = utils.parse_secrets(secret_names, secret_values)
 
-    rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token, secrets)
-    rsm.push_to_github()
+    try:
+        rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token, secrets)
+        rsm.push_to_github()
+        print.success(f"Secrets successfully pushed to Github. Open https://github.com/{state.owner}/{state.repo_name}/settings/secrets/actions to validate.")
+    
+    except as e:
+        print.error(f"An error has occured while pusing secrets to Github. {}", error_type: "fatal" )
 
