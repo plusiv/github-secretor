@@ -1,7 +1,7 @@
 import typer
 import .validations
+import .printing as print 
 from . import GENERAL_HELPS, REPOS_HELPS
-from rich import print
 from typing import Optional, List
 from utils import utils
 from pathlib import Path
@@ -90,7 +90,7 @@ def add_secret(
             secret_values = utils.get_content_from_file(value_from_file)
             # Validations for the len of the the secrets names and values
             if not validations.secrets_size(secret_names, secret_values):
-                print(":boom:[bold red]Error:[/bold red] Secret names and values doesn't have the same length.")
+                print.error("Secret names and values doesn't have the same length")
                 raise typer.Abort()
                 
         # Prompt values if there'snt a file with values
@@ -102,7 +102,7 @@ def add_secret(
                     secret_value = typer.prompt(f"Insert secret value for {secret_name}", hide_input=True)
                     secrets_values.append(secret_value)
             else:
-                print(":boom:[bold red]Error:[/bold red] Unable to add duplicated values.")
+                print.error("Unable to add duplicated values")
                 raise typer.Abort()
 
         secrets = utils.parse_secrets(secret_names, secret_values)
