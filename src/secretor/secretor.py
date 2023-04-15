@@ -1,7 +1,7 @@
 from base64 import b64encode
 from nacl import encoding, public
 from utils import utils
-from . import DEFAULT_GITHUB_API_URL
+from . import DEFAULT_GITHUB_API_URL, exceptions
 import requests
 
 
@@ -14,6 +14,8 @@ class SecretsManager:
         self._github_api_url = github_api_url
         self.scope_object_name = scope_object_name
         self.secrets = secrets
+        if not token:
+            raise exceptions.NoTokenSet()
         self.default_headers = {
             'Authorization': f'Bearer {token}',
             'X-GitHub-Api-Version':'2022-11-28',
