@@ -132,7 +132,11 @@ def get_secrets(
             secrets = rsm.get_all_secrets()
             print.secrets(secrets)
         else:
-            for secret in secret_names:
-                print.screts([rsm.get_secret(secret_name)])
+            for secret_name in secret_names:
+                secret = rsm.get_secret(secret_name)
+                if not secret:
+                    print.error(f"Seems like {secret_name} does not exist on the repository {state.repo_name}")
+                    continue
+                print.secrets([secret])
                 
     
