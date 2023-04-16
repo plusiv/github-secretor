@@ -9,11 +9,9 @@ class SecretsManager:
     def __init__(self,
                  scope_object_name: str,
                  token: str,
-                 secrets: list,
                  github_api_url: str):
         self._github_api_url = github_api_url
         self.scope_object_name = scope_object_name
-        self.secrets = secrets
         if not token:
             raise exceptions.NoTokenSet()
         self.default_headers = {
@@ -48,11 +46,11 @@ class SecretsManager:
         return b64encode(encrypted).decode("utf-8")
 
     @utils.http_exception_handler
-    def push_to_github(self) -> str:
+    def push_to_github(self, secrets: list = []) -> str:
         public_key = self.__get_public_key()
 
         # Iterate over secrets
-        for secret in self.secrets:
+        for secret in secrets:
             encrypted_secret = self.encrypt(public_key['key'], secret[1])
             data = {"encrypted_value": encrypted_secret,
                     "secret_name": secret[0],
@@ -84,12 +82,10 @@ class RepoSecretsManager(SecretsManager):
                  owner: str,
                  repo_name: str,
                  token: str,
-                 secrets: str,
                  github_api_url: str = DEFAULT_GITHUB_API_URL):
         super().__init__(github_api_url=github_api_url,
                          scope_object_name=f'{owner}/{repo_name}',
-                         token=token,
-                         secrets=secrets)
+                         token=token)
 
         self.additional_payload = {
                 'owner': owner,
@@ -104,13 +100,11 @@ class OrgSecretsManager(SecretsManager):
     def __init__(self,
                  org: str,
                  token: str,
-                 secrets: str,
                  visibility: str = 'all',
                  github_api_url: str = DEFAULT_GITHUB_API_URL):
         super().__init__(github_api_url=github_api_url,
                          scope_object_name=org,
-                         token=token,
-                         secrets=secrets)
+                         token=token)
 
         self.additional_payload = {
                 'visibility': visibility

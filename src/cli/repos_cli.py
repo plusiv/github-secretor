@@ -106,8 +106,8 @@ def add_secret(
         secrets = utils.parse_secrets(secret_names, secret_values)
 
     try:
-        rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token, secrets)
-        rsm.push_to_github()
+        rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token)
+        rsm.push_to_github(secrets)
         print.success(f"Secrets successfully pushed to Github. Open https://github.com/{state.owner}/{state.repo_name}/settings/secrets/actions to validate.")
     
     except Exception as e:
@@ -126,4 +126,5 @@ def get_secrets(
                 help=help_info(GENERAL_HELPS, 'secret-name')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
         ):
+    ...
     
