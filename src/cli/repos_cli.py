@@ -126,5 +126,13 @@ def get_secrets(
                 help=help_info(GENERAL_HELPS, 'secret-name')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1]),
         ):
-    ...
+    
+        rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token)
+        if get_all_secrets:
+            secrets = rsm.get_all_secrets()
+            print.secrets(secrets)
+        else:
+            for secret in secret_names:
+                print.screts([rsm.get_secret(secret_name)])
+                
     
