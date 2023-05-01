@@ -139,4 +139,16 @@ def get_secrets(
                     continue
                 print.secrets([secret])
                 
-    
+@app.command("delete")
+def delete_secrets(
+        secret_names: Optional[List[str]] = typer.Option(None, \
+                '--secret-name', '-n', \
+                help=help_info(GENERAL_HELPS, 'secret-name')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'secret-name')[1])
+        ):
+
+    rsm = secretor.RepoSecretsManager(state.owner, state.repo_name, state.token)
+    for secret_name in secret_names:
+        rsm.delete_secret(secret_name)
+        print.delete_secret(secret_name)
+

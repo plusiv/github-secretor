@@ -10,6 +10,8 @@ def secrets(secrets: list = []) -> None:
         print(f":stopwatch: [bold white]Updated at: [/bold white]{updated_at}")
         print("\n")
 
+def deleted_secret(secret_name: str = "") -> None:
+        print(f":bomb: [bold red]Secret deleted: [/bold red] {secret_name}.")
 
 def success(message: str = "") -> None:
     print(f":white_check_mark: [bold green]Success:[/bold green] {message}.")

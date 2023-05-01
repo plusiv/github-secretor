@@ -77,6 +77,11 @@ class SecretsManager:
 
         return res.json().get('secrets')
 
+    @utils.http_exception_handler
+    def delete_secret(self, secret_name: str) -> None:
+        res = requests.delete(f"{self.github_api_url}/actions/secrets/{secret_name}", headers=self.default_headers)
+        res.raise_for_status()
+
 class RepoSecretsManager(SecretsManager):
     def __init__(self,
                  owner: str,
