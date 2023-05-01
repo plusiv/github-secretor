@@ -35,7 +35,7 @@ def common_options(state: ReposCommon)->bool:
     # Set github access token if not passed
     if state.token_file:
         with open(state.token_file, 'r') as f:
-            state.token = f.readline()
+            state.token = f.readline().rstrip()
     elif not state.token and not state.token_file:
         state.token = typer.prompt("Insert Github Access Token", hide_input=True)
     elif state.token and state.token_file:
