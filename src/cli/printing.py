@@ -8,13 +8,13 @@ def secrets(secrets: list = []) -> None:
         name = secret.get('name')
         created_at = secret.get('created_at')
         updated_at = secret.get('updated_at')
-        print(f":lock: [bold white]Secret Name: [/bold white]{name}")
+        print(f":lock: [bold white]Secret Name:[/bold white] {name}")
         print(f":stopwatch: [bold white]Created at: [/bold white]{created_at}")
         print(f":stopwatch: [bold white]Updated at: [/bold white]{updated_at}")
         print("\n")
 
-def deleted_secret(secret_name: str = "") -> None:
-        print(f":bomb: [bold red]Secret deleted: [/bold red] {secret_name}.")
+def delete_secret(secret_name: str = "") -> None:
+        print(f":bomb: [bold red]Secret deleted:[/bold red] {secret_name}.")
 
 def success(message: str = "") -> None:
     print(f":white_check_mark: [bold green]Success:[/bold green] {message}.")
