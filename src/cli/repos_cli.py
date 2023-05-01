@@ -18,7 +18,7 @@ state = validations.ReposCommon()
 def main(
         owner: str = typer.Option("", \
                 '--owner', '-o', \
-                envvar='GIT_USERNAME', \
+                envvar='GITHUB_USERNAME', \
                 help=help_info(REPOS_HELPS, 'owner')[0], \
                 rich_help_panel=help_info(REPOS_HELPS, 'owner')[1]),
 
@@ -34,7 +34,7 @@ def main(
 
         token_file: Optional[Path] = typer.Option(None, \
                 '--token-file', '-T', \
-                envvar='GIT_TOKEN_PATH', \
+                envvar='GITHUB_TOKEN_PATH', \
                 callback=validations.file_exists, \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),
