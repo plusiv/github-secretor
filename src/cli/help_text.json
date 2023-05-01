@@ -1,7 +1,15 @@
 {
     "general": {
+        "help": {
+            "help": "Show help info.",
+            "rich_help_panel": ""
+        },
         "secret-name": {
             "help": "Name of the secret name. It can be a list.",
+            "rich_help_panel": "Secrets"
+        },
+        "get-all-secrets": {
+            "help": "Get all secrets information.",
             "rich_help_panel": "Secrets"
         },
         "token": {
@@ -29,6 +37,18 @@
         },
         "repo-name": {
             "help": "Repository name to add secrets.",
+            "rich_help_panel": ""
+        },
+        "add-secrets": {
+            "help": "Add secrets to a repository.",
+            "rich_help_panel": ""
+        },
+        "get-secrets": {
+            "help": "Get secrets from a repository.",
+            "rich_help_panel": ""
+        },
+        "delete-secrets": {
+            "help": "Delete repository secrets.",
             "rich_help_panel": ""
         }
     },

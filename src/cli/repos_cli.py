@@ -50,7 +50,7 @@ def main(
     validations.common_options(state=state)
 
 
-@app.command("add")
+@app.command("add", help=help_info(REPOS_HELPS, 'add-secrets')[0])
 def add_secret(
         secret_names: Optional[List[str]] = typer.Option(None, \
                 '--secret-name', '-n', \
@@ -116,12 +116,12 @@ def add_secret(
         raise typer.Abort()
 
 
-@app.command("get")
+@app.command("get", help=help_info(REPOS_HELPS, 'get-secrets')[0])
 def get_secrets(
         get_all_secrets: bool = typer.Option(None, \
                 '--all', '-a', \
-                help=help_info(GENERAL_HELPS, 'get_all_secrets')[0], \
-                rich_help_panel=help_info(GENERAL_HELPS, 'get_all_secrets')[1]),
+                help=help_info(GENERAL_HELPS, 'get-all-secrets')[0], \
+                rich_help_panel=help_info(GENERAL_HELPS, 'get-all-secrets')[1]),
         secret_names: Optional[List[str]] = typer.Option(None, \
                 '--secret-name', '-n', \
                 help=help_info(GENERAL_HELPS, 'secret-name')[0], \
@@ -139,7 +139,7 @@ def get_secrets(
                 continue
             print.secrets([secret])
                 
-@app.command("delete")
+@app.command("delete", help=help_info(REPOS_HELPS, 'delete-secrets')[0])
 def delete_secrets(
         secret_names: Optional[List[str]] = typer.Option(None, \
                 '--secret-name', '-n', \
