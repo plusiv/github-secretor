@@ -1,4 +1,5 @@
 import typer
+import os
 from . import GENERAL_HELPS, REPOS_HELPS, validations, printing as print
 from typing import Optional, List
 from utils import utils
@@ -34,7 +35,7 @@ def main(
 
         token_file: Optional[Path] = typer.Option(None, \
                 '--token-file', '-T', \
-                envvar='GITHUB_TOKEN_PATH', \
+                envvar='GITHUB_ACCESS_TOKEN_PATH', \
                 callback=validations.file_exists, \
                 help=help_info(GENERAL_HELPS, 'token-file')[0], \
                 rich_help_panel=help_info(GENERAL_HELPS, 'token-file')[1]),

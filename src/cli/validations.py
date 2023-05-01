@@ -1,5 +1,6 @@
 import typer
 import os
+from utils import utils
 from rich import print
 from typing import Optional
 from dataclasses import dataclass
@@ -16,16 +17,19 @@ def secrets_size(keys: list = [], values: list = []) -> bool:
     return len(keys) == len(values)
 
 def common_options(state: ReposCommon)->bool:
-    # Set owner if passed
-    if not state.owner:
-        state.owner = typer.prompt("Insert repository owner")
+    # Get repo info from local git env
+    repo_info = utils.get_repo_info()
 
-    # Set repo name if passed
+    # Set owner if not passed
+    if not state.owner:
+        state.owner = repo_info.get('owner') if repo_info.get('owner') else typer.prompt("Insert repository owner")
+
+    # Set repo name if not  passed
     if not state.repo_name:
-        state.repo_name = typer.prompt("Insert repository name")
+        state.repo_name = repo_info.get('repo_name') if repo_info.get('repo_name') else typer.prompt("Insert repository name")
 
     if not state.repo_name or not state.owner:
-        print(":boom:[bold red]Error:[/bold red] Repository name ")
+        print(":boom:[bold red]Error:[/bold red] Repository name and owner must be set")
         raise typer.Abort()
 
     # Set github access token if not passed

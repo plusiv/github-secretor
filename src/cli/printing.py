@@ -1,5 +1,8 @@
 from rich import print
 
+def normal_print(string: str) -> None:
+    print(string)
+
 def secrets(secrets: list = []) -> None:
     for secret in secrets:
         name = secret.get('name')

@@ -1,6 +1,8 @@
-from dotenv import dotenv_values
 import requests
 import json
+import os
+from git import Repo
+from dotenv import dotenv_values
 from pathlib import Path
 from typing import List
 from collections import ChainMap
@@ -48,5 +50,17 @@ def get_help_info(path: Path, section: str = 'general') -> dict:
     with path.open() as f:
         helps = json.load(f)
         return helps.get(section)
+
+def get_repo_info(path_to_repo: str = os.getcwd()) -> dict:
+    try:
+        repo = Repo(path_to_repo)
+
+        repo_url = repo.remotes.origin.url
+        owner, repo_name = repo_url.split('.git')[0].split('/')[-2:]
+
+        return {"repo_name": repo_name, "owner": owner}
+
+    except:
+        return dict()
 
 
